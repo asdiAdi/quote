@@ -4,13 +4,13 @@
   padding: 0;
 
   color: #032f53;
-  text-align: center;
-  font-family: Lugrasimo, sans-serif;
 }
 
 body {
   background-color: #fff7e7;
   align-items: center;
+
+  font-family: Lugrasimo, sans-serif;
 }
 
 .quote-container {
@@ -28,6 +28,7 @@ body {
   width: 100%;
   font-family: "Zalando Sans SemiExpanded", sans-serif;
   font-weight: normal;
+  text-align: center;
 
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -82,26 +83,91 @@ body {
 .api-container {
   margin: auto;
   width: 80%;
-  height: 80vh;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 .column {
-  flex: 2;
+  flex: 1;
   margin-top: 40px;
+  height: fit-content;
   padding: 20px;
   background-color: #f0f0f0;
-  text-align: center;
+  font-family: "Zalando Sans SemiExpanded", sans-serif;
+  border-radius: 12px;
+  border: 1px solid #f0bea8;
 }
 
-.column:nth-child(3) {
-  flex: 3;
+.column__title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: left;
+  margin-left: 30px;
 }
 
-.link-container {
-  height: 20vh;
+.links-container {
+  font-family: "Zalando Sans SemiExpanded", sans-serif;
+  margin: 60px auto 60px auto;
+  max-width: 80%;
+  font-size: 0.8rem;
+}
+
+.links-container__item {
+  margin: 1rem;
+}
+
+.api-link {
+  /*background: #cfcfcf;*/
+  /*border-radius: 15px;*/
+  color: #e28258;
+  font-weight: bold;
+  font-size: 1rem;
+  width: fit-content;
+  margin: auto;
+  padding: 1rem;
+}
+
+.api-reference {
+  margin-top: 12px;
+  list-style: none;
+}
+
+.api-reference__item {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0bea8;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.api-reference__item__method {
+  font-weight: bold;
+  background-color: #e28258;
+  padding: 4px 8px 4px 8px;
+  border-radius: 6px;
+}
+.api-reference__item__name {
+}
+
+.request__url,
+.response__status {
+  width: 100%;
+  font-weight: bold;
+  text-align: left;
+  color: #e28258;
+  margin-left: 30px;
+}
+
+pre {
+  margin-top: 30px;
+  border: 1px solid #f0bea8;
+  border-radius: 6px;
+  font-family: "Fira Code", monospace;
+  font-size: 1rem;
 }
 
 @media only screen and (min-width: 380px) {
@@ -132,8 +198,12 @@ body {
   .author__divider {
     width: calc(100% - 6rem);
   }
+
+  .links-container {
+    font-size: 1rem;
+  }
 }
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 850px) {
   .quote-container {
     width: 800px;
   }
@@ -164,5 +234,12 @@ body {
 
   .api-container {
     flex-direction: row;
+    height: 60vh;
+  }
+
+  .links-container {
+    height: 30vh;
+    margin: 0 auto 10vh auto;
+    font-size: 1.5rem;
   }
 }
