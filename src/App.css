@@ -1,42 +1,168 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  color: #032f53;
+  text-align: center;
+  font-family: Lugrasimo, sans-serif;
+}
+
+body {
+  background-color: #fff7e7;
+  align-items: center;
+}
+
+.quote-container {
+  margin: auto;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  background-color: #e28258;
+  width: 100%;
+  font-family: "Zalando Sans SemiExpanded", sans-serif;
+  font-weight: normal;
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.quote {
+  padding: 2rem 1rem 3rem 1rem;
+  font-size: 1.3rem;
+  text-align: left;
+}
+
+.author {
+  position: relative;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.author__name {
+  position: absolute;
+  font-size: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: normal;
+  background-color: #fff7e7;
+  white-space: nowrap;
+
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.author__divider {
+  position: absolute;
+  height: 2px;
+  border: none;
+  width: calc(100% - 2rem);
+  background: #e28258;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.divider {
+  width: 80%;
+  margin: auto;
+}
+
+.api-container {
+  margin: auto;
+  width: 80%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.column {
+  flex: 2;
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f0f0f0;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.column:nth-child(3) {
+  flex: 3;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.link-container {
+  height: 20vh;
+}
+
+@media only screen and (min-width: 380px) {
+  .quote-container {
+    width: 80%;
   }
-  to {
-    transform: rotate(360deg);
+
+  .title {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .quote {
+    padding: 2rem 3rem 4rem 3rem;
+    font-size: 2rem;
+  }
+
+  .author {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
+  .author__name {
+    font-size: 1.5rem;
+  }
+
+  .author__divider {
+    width: calc(100% - 6rem);
   }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media only screen and (min-width: 800px) {
+  .quote-container {
+    width: 800px;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .title {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    font-size: 3rem;
+  }
 
-.read-the-docs {
-  color: #888;
+  .quote {
+    padding: 3rem 6rem 3rem 6rem;
+    font-size: 3.5rem;
+  }
+
+  .author {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+
+  .author__name {
+    font-size: 2.5rem;
+  }
+
+  .author__divider {
+    width: calc(100% - 12rem);
+  }
+
+  .api-container {
+    flex-direction: row;
+  }
 }

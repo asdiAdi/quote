@@ -1,39 +1,33 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-
-const client = generateClient<Schema>();
+import "./App.css";
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
   return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-    </main>
+    <>
+      <main className="quote-container">
+        <h2 className="title">QUOTE OF THE DAY</h2>
+        <h1 className="quote">
+          <q>
+            The best way to get started is to quote talking and begin doing.
+          </q>
+        </h1>
+
+        <div className="author">
+          <h3 className="author__name">Walt Disney</h3>
+          <hr className="author__divider" />
+        </div>
+      </main>
+
+      {/*<hr className="divider" />*/}
+      {/*TODO API List*/}
+      {/*<footer className="footer-container">
+        <div className="api-container">
+          <div className="column"></div>
+          <div className="column">Request</div>
+          <div className="column">Response</div>
+        </div>
+        <div className="link-container"></div>
+      </footer>*/}
+    </>
   );
 }
 
