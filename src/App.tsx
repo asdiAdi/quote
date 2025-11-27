@@ -1,5 +1,8 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import getQuote from "./api/getQuote.ts";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "../amplify/data/resource.ts";
 
 type APIREFERENCE = {
   request: {
@@ -95,11 +98,18 @@ const apiReference: APIREFERENCE[] = [
   },
 ];
 
+const client = generateClient<Schema>();
+
 function App() {
   const [apiRefIndex, setApiRefIndex] = useState<number>(0);
   // TODO get random quote again
   // TODO random theme each time you reload
   // TODO working API
+
+  useEffect(() => {
+    // getQuote();
+    client.models.tags.list().then(console.log);
+  }, []);
 
   return (
     <>
