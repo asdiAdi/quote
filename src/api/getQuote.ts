@@ -5,11 +5,6 @@ export default async function getQuote() {
     const restOperation = get({
       apiName: "myHttpApi",
       path: "items",
-      options: {
-        retryStrategy: {
-          strategy: "no-retry", // Overrides default retry strategy
-        },
-      },
     });
     const { body } = await restOperation.response;
     const json = await body.json();

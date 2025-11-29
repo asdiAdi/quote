@@ -5,14 +5,6 @@ export default async function getTag() {
     const restOperation = get({
       apiName: "myHttpApi",
       path: "tags",
-      options: {
-        retryStrategy: {
-          strategy: "no-retry", // Overrides default retry strategy
-        },
-        body: {
-          test: "testbody",
-        },
-      },
     });
 
     const { body } = await restOperation.response;

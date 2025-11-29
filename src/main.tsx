@@ -7,24 +7,13 @@ import { parseAmplifyConfig } from "aws-amplify/utils";
 
 const amplifyConfig = parseAmplifyConfig(outputs);
 
-Amplify.configure(
-  {
-    ...amplifyConfig,
-    API: {
-      ...amplifyConfig.API,
-      REST: outputs.custom.API,
-    },
+Amplify.configure({
+  ...amplifyConfig,
+  API: {
+    ...amplifyConfig.API,
+    REST: outputs.custom.API,
   },
-  {
-    API: {
-      REST: {
-        retryStrategy: {
-          strategy: "no-retry", // Overrides default retry strategy
-        },
-      },
-    },
-  },
-);
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
