@@ -1,15 +1,18 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 // import getQuote from "./api/getQuote.ts";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "../amplify/data/resource.ts";
+import getTag from "./api/getTag.ts";
 
 type APIREFERENCE = {
   request: {
     method: "GET";
     name: string;
     url: string;
-    body?: string;
+    query?: {
+      param: string;
+      type: string;
+      description: string;
+    }[];
   };
   response: { status: 200 | 404; data: string };
 };
@@ -20,15 +23,28 @@ const apiReference: APIREFERENCE[] = [
       method: "GET",
       name: "Random Quote",
       url: "/random",
-      body: `
-  {
-      maxLength: number,
-      minLength: number,
-      tags: string,
-      author: string,
-      authorId: string,
-  }
-      `,
+      query: [
+        {
+          param: "minLength",
+          type: "int",
+          description: "The minimum Length in characters.",
+        },
+        {
+          param: "maxLength",
+          type: "int",
+          description: "The maximum Length in characters.",
+        },
+        {
+          param: "tags",
+          type: "string",
+          description: "Get a random quote with specific tag(s).",
+        },
+        {
+          param: "author",
+          type: "string",
+          description: "Get a random quote by one or more authors",
+        },
+      ],
     },
     response: {
       status: 200,
@@ -49,16 +65,33 @@ const apiReference: APIREFERENCE[] = [
       method: "GET",
       name: "Random Quotes",
       url: "/random",
-      body: `
-  {
-      limit: number,
-      maxLength: number,
-      minLength: number,
-      tags: string,
-      author: string,
-      authorId: string,
-  }
-      `,
+      query: [
+        {
+          param: "minLength",
+          type: "int",
+          description: "The number of random quotes to retrieve.",
+        },
+        {
+          param: "minLength",
+          type: "int",
+          description: "The minimum Length in characters.",
+        },
+        {
+          param: "maxLength",
+          type: "int",
+          description: "The maximum Length in characters.",
+        },
+        {
+          param: "tags",
+          type: "string",
+          description: "Get a random quote with specific tag(s).",
+        },
+        {
+          param: "author",
+          type: "string",
+          description: "Get a random quote by one or more authors",
+        },
+      ],
     },
     response: {
       status: 200,
@@ -96,9 +129,39 @@ const apiReference: APIREFERENCE[] = [
       `,
     },
   },
+  {
+    request: {
+      method: "GET",
+      name: "Tags",
+      url: "/tags",
+      query: [
+        {
+          param: "sortBy",
+          type: "enum",
+          description: "dateAdded, dateModified, name, quoteCount",
+        },
+        {
+          param: "order",
+          type: "enum",
+          description: "asc, desc",
+        },
+      ],
+    },
+    response: {
+      status: 200,
+      data: `
+  {
+      _id: number,
+      content: string,
+      author: string,
+      authorSlug: string,
+      length: number,
+      tags: string[],
+  }
+      `,
+    },
+  },
 ];
-
-const client = generateClient<Schema>();
 
 function App() {
   const [apiRefIndex, setApiRefIndex] = useState<number>(0);
@@ -106,9 +169,11 @@ function App() {
   // TODO random theme each time you reload
   // TODO working API
 
+  const params = apiReference[apiRefIndex].request.query;
+
   useEffect(() => {
     // getQuote();
-    client.models.tags.list().then(console.log);
+    getTag();
   }, []);
 
   return (
@@ -157,10 +222,25 @@ function App() {
               <div className="request__url">
                 {apiReference[apiRefIndex].request.url}
               </div>
-              {apiReference[apiRefIndex].request.body && (
-                <pre>
-                  <code>{apiReference[apiRefIndex].request.body}</code>
-                </pre>
+              {!!params && (
+                <table className="request__params">
+                  <thead>
+                    <tr>
+                      <th>param</th>
+                      <th>type</th>
+                      <th>description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {params.map(({ param, type, description }, index) => (
+                      <tr key={`params-${index}`}>
+                        <td>{param}</td>
+                        <td>{type}</td>
+                        <td>{description}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
             </div>
           </div>

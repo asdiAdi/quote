@@ -1,9 +1,8 @@
 import { defineFunction, secret } from "@aws-amplify/backend";
 
-export const myApiFunction = defineFunction({
-  name: "api-function",
+export const apiTags = defineFunction({
+  name: "api-tags",
   environment: {
     SUPABASE_URL: secret("SUPABASE_URL"),
-    SUPABASE_SERVICE_KEY: secret("SUPABASE_SERVICE_KEY"),
   },
 });
