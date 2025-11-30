@@ -11,7 +11,6 @@ export default async function getTag() {
     const json = await body.json();
     console.log(json);
   } catch (error) {
-    // console.log("failed");
-    console.log("GET call failed: ", JSON.stringify(error));
+    console.log("GET call failed: ", error);
   }
 }

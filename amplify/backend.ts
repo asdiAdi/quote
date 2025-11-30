@@ -1,21 +1,19 @@
 import dotenv from "dotenv";
 import { defineBackend } from "@aws-amplify/backend";
+import { CustomARecord } from "./custom/arecord/resource";
 import { apiTags } from "./functions/api/tags/resource";
 import {
   CorsHttpMethod,
-  DomainName,
   HttpApi,
   HttpMethod,
 } from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpLambdaIntegration } from "aws-cdk-lib/aws-apigatewayv2-integrations";
-import { aws_route53, aws_route53_targets, Stack } from "aws-cdk-lib";
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
+import { Stack } from "aws-cdk-lib";
 
 dotenv.config();
 const CERT_ARN = process.env.CERT_ARN ?? "";
 const HOSTED_ZONE_ID = process.env.HOSTED_ZONE_ID ?? "";
 const SUBDOMAIN = process.env.SUBDOMAIN ?? "";
-
 const backend = defineBackend({
   apiTags: apiTags,
 });
@@ -23,46 +21,13 @@ const backend = defineBackend({
 // create a new API stack
 const apiStack = backend.createStack("api-stack");
 
-// get ssl cert
-const certificate = Certificate.fromCertificateArn(
-  apiStack,
-  "ApiCert",
-  CERT_ARN,
-);
-
-// create domain name
-const apiName = new DomainName(apiStack, "ApiName", {
-  domainName: `${SUBDOMAIN}.carladi.com`,
-  certificate: certificate,
+// create custom ARecord
+const aRecord = new CustomARecord(apiStack, "ARecord", {
+  cert_arn: CERT_ARN,
+  subdomain: SUBDOMAIN,
+  domain: "carladi.com",
+  hosted_zone_id: HOSTED_ZONE_ID,
 });
-
-// get hosted zone
-const hostedZone = aws_route53.HostedZone.fromHostedZoneAttributes(
-  apiStack,
-  "HostedZone",
-  {
-    hostedZoneId: HOSTED_ZONE_ID,
-    zoneName: "carladi.com",
-  },
-);
-
-// route arecord to domain name
-new aws_route53.ARecord(apiName, "ApiAliasRecord", {
-  zone: hostedZone,
-  recordName: SUBDOMAIN,
-  target: aws_route53.RecordTarget.fromAlias(
-    new aws_route53_targets.ApiGatewayv2DomainProperties(
-      apiName.regionalDomainName,
-      apiName.regionalHostedZoneId,
-    ),
-  ),
-});
-
-// http lambda integration for each api
-const apiTagsLambdaIntegration = new HttpLambdaIntegration(
-  "apiTagsLambdaIntegration",
-  backend.apiTags.resources.lambda,
-);
 
 // create a new HTTP API with IAM as default authorizer
 const httpApi = new HttpApi(apiStack, "HttpApi", {
@@ -76,10 +41,17 @@ const httpApi = new HttpApi(apiStack, "HttpApi", {
     allowHeaders: ["*"],
   },
   defaultDomainMapping: {
-    domainName: apiName,
+    domainName: aRecord.domainName,
   },
+  disableExecuteApiEndpoint: true,
   createDefaultStage: true,
 });
+
+// http lambda integration for each api
+const apiTagsLambdaIntegration = new HttpLambdaIntegration(
+  "apiTagsLambdaIntegration",
+  backend.apiTags.resources.lambda,
+);
 
 // add a proxy resource path to the API
 httpApi.addRoutes({
@@ -99,10 +71,11 @@ httpApi.addRoutes({
 backend.addOutput({
   custom: {
     API: {
-      [httpApi.httpApiName!]: {
-        endpoint: httpApi.url,
-        region: Stack.of(httpApi).region,
-        apiName: httpApi.httpApiName,
+      REST: {
+        [httpApi.httpApiName!]: {
+          endpoint: `https://${aRecord.domainName.name}/`,
+          region: Stack.of(httpApi).region,
+        },
       },
     },
   },
