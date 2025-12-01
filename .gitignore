@@ -29,8 +29,7 @@ amplify_outputs*
 amplifyconfiguration*
 .env*
 
-scratch*.js
-scratch*.cjs
+amplify/scratch.ts
 
 # drizzle
 drizzle

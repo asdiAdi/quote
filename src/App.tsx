@@ -53,7 +53,6 @@ const apiReference: APIREFERENCE[] = [
       id: number,
       content: string,
       author: string,
-      authorSlug: string,
       length: number,
       tags: string[],
   }
@@ -67,7 +66,7 @@ const apiReference: APIREFERENCE[] = [
       url: "/random",
       query: [
         {
-          param: "minLength",
+          param: "limit",
           type: "int",
           description: "The number of random quotes to retrieve.",
         },
@@ -101,7 +100,6 @@ const apiReference: APIREFERENCE[] = [
         id: number,
         content: string,
         author: string,
-        authorSlug: string,
         length: number,
         tags: string[],
     }
@@ -122,7 +120,6 @@ const apiReference: APIREFERENCE[] = [
       id: number,
       content: string,
       author: string,
-      authorSlug: string,
       length: number,
       tags: string[],
   }

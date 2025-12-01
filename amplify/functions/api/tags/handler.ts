@@ -1,11 +1,11 @@
-import type { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import { APIGatewayProxyHandler } from "aws-lambda/trigger/api-gateway-proxy";
 import { env } from "$amplify/env/api-tags";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { quotesTags, tags } from "../../../db/schema";
 import { asc, desc, eq, sql } from "drizzle-orm";
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
+export const handler: APIGatewayProxyHandler = async (event) => {
   console.log("event", event);
 
   const { queryStringParameters } = event;
@@ -16,11 +16,11 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
   const client = postgres(env.SUPABASE_URL, { prepare: false });
   const db = drizzle({ client });
 
+  const sortBy = queryStringParameters?.sort;
+  const order = queryStringParameters?.order;
+
   if (queryStringParameters) {
-    if (
-      Object.hasOwn(queryStringParameters, "sortBy") &&
-      queryStringParameters.sortBy === "quoteCount"
-    ) {
+    if (sortBy === "quoteCount") {
       body = await db
         .select({
           id: tags.id,
@@ -31,8 +31,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         .leftJoin(quotesTags, eq(tags.id, quotesTags.tagId))
         .groupBy(tags.id)
         .orderBy(
-          Object.hasOwn(queryStringParameters, "order") &&
-            queryStringParameters.order === "desc"
+          order === "desc"
             ? desc(sql<number>`COUNT(${quotesTags.quoteId})`)
             : asc(sql<number>`COUNT(${quotesTags.quoteId})`),
         );
@@ -40,12 +39,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       body = await db
         .select()
         .from(tags)
-        .orderBy(
-          Object.hasOwn(queryStringParameters, "order") &&
-            queryStringParameters.order === "desc"
-            ? desc(tags.name)
-            : asc(tags.name),
-        );
+        .orderBy(order === "desc" ? desc(tags.name) : asc(tags.name));
     }
   } else {
     // default
