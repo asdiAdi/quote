@@ -3,8 +3,8 @@ import { get } from "aws-amplify/api";
 export default async function getQuote() {
   try {
     const restOperation = get({
-      apiName: "myHttpApi",
-      path: "items",
+      apiName: "api-quotes",
+      path: "tags",
     });
     const { body } = await restOperation.response;
     const json = await body.json();

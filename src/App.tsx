@@ -50,7 +50,7 @@ const apiReference: APIREFERENCE[] = [
       status: 200,
       data: `
   {
-      _id: number,
+      id: number,
       content: string,
       author: string,
       authorSlug: string,
@@ -98,7 +98,7 @@ const apiReference: APIREFERENCE[] = [
       data: `
   [
     {
-        _id: number,
+        id: number,
         content: string,
         author: string,
         authorSlug: string,
@@ -119,7 +119,7 @@ const apiReference: APIREFERENCE[] = [
       status: 200,
       data: `
   {
-      _id: number,
+      id: number,
       content: string,
       author: string,
       authorSlug: string,
@@ -138,7 +138,7 @@ const apiReference: APIREFERENCE[] = [
         {
           param: "sortBy",
           type: "enum",
-          description: "dateAdded, dateModified, name, quoteCount",
+          description: "name, quoteCount",
         },
         {
           param: "order",
@@ -151,12 +151,11 @@ const apiReference: APIREFERENCE[] = [
       status: 200,
       data: `
   {
-      _id: number,
-      content: string,
-      author: string,
-      authorSlug: string,
-      length: number,
-      tags: string[],
+      id: number,
+      name: string,
+      
+      // if sorted by quoteCount
+      count: number, 
   }
       `,
     },
@@ -197,7 +196,7 @@ function App() {
       <footer className="footer-container">
         <div className="api-container">
           <div className="column">
-            <div className="api-link">https://quote-api.carladi.com/</div>
+            <div className="api-link">https://api-quotes.carladi.com/</div>
 
             <ul className="api-reference">
               {apiReference.map((item, index) => (

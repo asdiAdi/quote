@@ -3,7 +3,7 @@ import { get } from "aws-amplify/api";
 export default async function getTag() {
   try {
     const restOperation = get({
-      apiName: "myHttpApi",
+      apiName: "api-quotes",
       path: "tags",
     });
 
