@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import getDailyQuote from "./api/getDailyQuote.ts";
+import outputs from "../amplify_outputs.json";
 
 type APIREFERENCE = {
   request: {
@@ -160,10 +161,8 @@ const apiReference: APIREFERENCE[] = [
 
 function App() {
   const [apiRefIndex, setApiRefIndex] = useState<number>(0);
-  const [dailyQuote, setDailyQuote] = useState<string>(
-    "The best way to get started is to quote talking and begin doing.",
-  );
-  const [dailyAuthor, setDailyAuthor] = useState<string>("Walt Disney");
+  const [dailyQuote, setDailyQuote] = useState<string>("");
+  const [dailyAuthor, setDailyAuthor] = useState<string>("");
 
   // TODO get random quote again
   // TODO random theme each time you reload
@@ -176,9 +175,12 @@ function App() {
       // your async code here
       const data = await getDailyQuote();
       if (data) {
-        const { content, author } = data;
-        setDailyQuote(content);
-        setDailyAuthor(author);
+        const { content, author } = data || {};
+        setDailyQuote(
+          content ??
+            "The best way to get started is to quote talking and begin doing.",
+        );
+        setDailyAuthor(author ?? "Walt Disney");
       }
     })();
   }, []);
@@ -187,9 +189,7 @@ function App() {
     <>
       <main className="quote-container">
         <h2 className="title">QUOTE OF THE DAY</h2>
-        <h1 className="quote">
-          <q>{dailyQuote}</q>
-        </h1>
+        <h1 className="quote">{dailyQuote && <q>{dailyQuote}</q>}</h1>
 
         <div className="author">
           <h3 className="author__name">{dailyAuthor}</h3>
@@ -203,6 +203,22 @@ function App() {
         <div className="api-container">
           <div className="column">
             <div className="api-link">https://api-quotes.carladi.com/</div>
+            <div className="api-header">
+              <div className="api-header-title">Headers:</div>
+              X-API-Key:
+              <button
+                className="api-header-button"
+                onClick={() =>
+                  navigator.clipboard
+                    .writeText(outputs.custom.publicApiKey)
+                    .then(() => {
+                      alert("Copied to clipboard");
+                    })
+                }
+              >
+                Copy
+              </button>
+            </div>
 
             <ul className="api-reference">
               {apiReference.map((item, index) => (

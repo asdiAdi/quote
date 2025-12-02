@@ -40,7 +40,7 @@ const tagsLI = new LambdaIntegration(backend.apiTags.resources.lambda);
 // create a new resource path
 const tagsPath = restApi.root.addResource("tags");
 // add methods you would like to create to the resource path
-tagsPath.addMethod("GET", tagsLI);
+tagsPath.addMethod("GET", tagsLI, { apiKeyRequired: true });
 // add a proxy resource path to the API
 // const tagsProxy = tagsPath.addProxy({
 //   defaultIntegration: tagsLI,
@@ -49,17 +49,17 @@ tagsPath.addMethod("GET", tagsLI);
 
 const quoteLi = new LambdaIntegration(backend.apiQuote.resources.lambda);
 const quotePath = restApi.root.addResource("quote").addResource("{quoteId}");
-quotePath.addMethod("GET", quoteLi);
+quotePath.addMethod("GET", quoteLi, { apiKeyRequired: true });
 
 const randomLi = new LambdaIntegration(backend.apiRandom.resources.lambda);
 const randomPath = restApi.root.addResource("random");
-randomPath.addMethod("GET", randomLi);
+randomPath.addMethod("GET", randomLi, { apiKeyRequired: true });
 
 const dailyQuoteLi = new LambdaIntegration(
   backend.apiDailyQuote.resources.lambda,
 );
 const dailyQuotePath = restApi.root.addResource("daily-quote");
-dailyQuotePath.addMethod("GET", dailyQuoteLi);
+dailyQuotePath.addMethod("GET", dailyQuoteLi, { apiKeyRequired: true });
 
 // add outputs to the configuration file
 backend.addOutput({
@@ -72,5 +72,6 @@ backend.addOutput({
         },
       },
     },
+    publicApiKey: restApi.apiKeyValue,
   },
 });

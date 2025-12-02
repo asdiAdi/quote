@@ -1,6 +1,6 @@
 import { Construct } from "constructs";
-import { aws_route53, aws_route53_targets } from "aws-cdk-lib";
-import { Cors, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { aws_apigateway, aws_route53, aws_route53_targets } from "aws-cdk-lib";
+import { ApiKey, Cors, IApiKey, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { ARecord, IHostedZone } from "aws-cdk-lib/aws-route53";
 
@@ -15,6 +15,8 @@ type CustomRestApiProps = {
 export class CustomRestApi extends RestApi {
   public readonly hostedZone: IHostedZone;
   public readonly arecord: ARecord;
+  public readonly apiKey: IApiKey;
+  public readonly apiKeyValue: string;
 
   constructor(scope: Construct, id: string, props: CustomRestApiProps) {
     const { cert_arn, subdomain, domain, stage, hosted_zone_id } = props;
@@ -44,6 +46,36 @@ export class CustomRestApi extends RestApi {
         certificate: certificate,
       },
     });
+
+    // public api value so I can encapsulate all users in a single limit
+    this.apiKeyValue = `${stage}K7WWeH7MxXXb4f7j76chxR3ukwsj2g6TV6HQ`;
+
+    // set limits
+    // create public api key
+    this.apiKey = new ApiKey(scope, "public-api-key", {
+      apiKeyName: `${subdomain}-api-key`,
+      stages: [this.deploymentStage],
+      description: "free api key for public consumption",
+      value: this.apiKeyValue,
+    });
+
+    // create usage plan with limits
+    const usagePlan = this.addUsagePlan("usage-plan", {
+      name: `${subdomain}-usage-plan`,
+      description: "Public usage plan with basic rate limits",
+      throttle: {
+        rateLimit: 5,
+        burstLimit: 10,
+      },
+      quota: {
+        limit: 100,
+        period: aws_apigateway.Period.DAY,
+      },
+    });
+
+    // apply to current stage and puclic api key
+    usagePlan.addApiKey(this.apiKey);
+    usagePlan.addApiStage({ stage: this.deploymentStage });
 
     // get hosted zone
     this.hostedZone = aws_route53.HostedZone.fromHostedZoneAttributes(
