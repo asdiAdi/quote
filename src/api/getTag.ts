@@ -3,7 +3,7 @@ import { get } from "aws-amplify/api";
 export default async function getTag() {
   try {
     const restOperation = get({
-      apiName: process.env.SUBDOMAIN as string,
+      apiName: import.meta.env.VITE_SUBDOMAIN,
       path: "tags",
     });
 
