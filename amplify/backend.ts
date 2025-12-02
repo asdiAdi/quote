@@ -6,6 +6,7 @@ import { Stack } from "aws-cdk-lib";
 import { CustomRestApi } from "./custom/restApi/resource";
 import { apiQuote } from "./functions/api/quote/resource";
 import { apiRandom } from "./functions/api/random/resource";
+import { apiDailyQuote } from "./functions/api/daily-quote/resource";
 
 dotenv.config();
 const STAGE = process.env.VITE_STAGE ?? "";
@@ -17,6 +18,7 @@ const backend = defineBackend({
   apiTags: apiTags,
   apiQuote: apiQuote,
   apiRandom: apiRandom,
+  apiDailyQuote: apiDailyQuote,
 });
 
 // create a new API stack
@@ -52,6 +54,12 @@ quotePath.addMethod("GET", quoteLi);
 const randomLi = new LambdaIntegration(backend.apiRandom.resources.lambda);
 const randomPath = restApi.root.addResource("random");
 randomPath.addMethod("GET", randomLi);
+
+const dailyQuoteLi = new LambdaIntegration(
+  backend.apiDailyQuote.resources.lambda,
+);
+const dailyQuotePath = restApi.root.addResource("daily-quote");
+dailyQuotePath.addMethod("GET", dailyQuoteLi);
 
 // add outputs to the configuration file
 backend.addOutput({

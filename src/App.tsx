@@ -1,7 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-// import getQuote from "./api/getQuote.ts";
-import getTag from "./api/getTag.ts";
+import getDailyQuote from "./api/getDailyQuote.ts";
 
 type APIREFERENCE = {
   request: {
@@ -161,6 +160,11 @@ const apiReference: APIREFERENCE[] = [
 
 function App() {
   const [apiRefIndex, setApiRefIndex] = useState<number>(0);
+  const [dailyQuote, setDailyQuote] = useState<string>(
+    "The best way to get started is to quote talking and begin doing.",
+  );
+  const [dailyAuthor, setDailyAuthor] = useState<string>("Walt Disney");
+
   // TODO get random quote again
   // TODO random theme each time you reload
   // TODO working API
@@ -168,8 +172,15 @@ function App() {
   const params = apiReference[apiRefIndex].request.query;
 
   useEffect(() => {
-    // getQuote();
-    getTag();
+    (async () => {
+      // your async code here
+      const data = await getDailyQuote();
+      if (data) {
+        const { content, author } = data;
+        setDailyQuote(content);
+        setDailyAuthor(author);
+      }
+    })();
   }, []);
 
   return (
@@ -177,13 +188,11 @@ function App() {
       <main className="quote-container">
         <h2 className="title">QUOTE OF THE DAY</h2>
         <h1 className="quote">
-          <q>
-            The best way to get started is to quote talking and begin doing.
-          </q>
+          <q>{dailyQuote}</q>
         </h1>
 
         <div className="author">
-          <h3 className="author__name">Walt Disney</h3>
+          <h3 className="author__name">{dailyAuthor}</h3>
           <hr className="author__divider" />
         </div>
       </main>
