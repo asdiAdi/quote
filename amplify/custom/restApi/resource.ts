@@ -48,7 +48,7 @@ export class CustomRestApi extends RestApi {
     });
 
     // public api value so I can encapsulate all users in a single limit
-    this.apiKeyValue = "zDrnK7WWeH7MxXXb4f7j76chxR3ukwsj2g6TV6HQ";
+    this.apiKeyValue = `${stage}K7WWeH7MxXXb4f7j76chxR3ukwsj2g6TV6HQ`;
 
     // set limits
     // create public api key
