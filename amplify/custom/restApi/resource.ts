@@ -56,7 +56,7 @@ export class CustomRestApi extends RestApi {
       apiKeyName: `${subdomain}-api-key`,
       stages: [this.deploymentStage],
       description: "free api key for public consumption",
-      value: "zDrnK7WWeH7MxXXb4f7j76chxR3ukwsj2g6TV6HQ",
+      value: this.apiKeyValue,
     });
 
     // create usage plan with limits
