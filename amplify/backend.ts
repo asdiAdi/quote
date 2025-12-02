@@ -8,11 +8,11 @@ import { apiQuote } from "./functions/api/quote/resource";
 import { apiRandom } from "./functions/api/random/resource";
 
 dotenv.config();
-const STAGE = process.env.STAGE ?? "";
-const CERT_ARN = process.env.CERT_ARN ?? "";
-const HOSTED_ZONE_ID = process.env.HOSTED_ZONE_ID ?? "";
-const SUBDOMAIN = process.env.SUBDOMAIN ?? "";
-const DOMAIN = process.env.DOMAIN ?? "";
+const STAGE = process.env.VITE_STAGE ?? "";
+const CERT_ARN = process.env.VITE_CERT_ARN ?? "";
+const HOSTED_ZONE_ID = process.env.VITE_HOSTED_ZONE_ID ?? "";
+const SUBDOMAIN = process.env.VITE_SUBDOMAIN ?? "";
+const DOMAIN = process.env.VITE_DOMAIN ?? "";
 const backend = defineBackend({
   apiTags: apiTags,
   apiQuote: apiQuote,
