@@ -28,7 +28,7 @@ export class CustomRestApi extends RestApi {
 
     // create the rest api with custom domain name
     super(scope, id, {
-      restApiName: "api-quotes",
+      restApiName: subdomain,
       deploy: true,
       deployOptions: {
         stageName: stage,
