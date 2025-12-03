@@ -21,48 +21,7 @@ const apiReference: APIREFERENCE[] = [
   {
     request: {
       method: "GET",
-      name: "Random Quote",
-      url: "/random",
-      query: [
-        {
-          param: "minLength",
-          type: "int",
-          description: "The minimum Length in characters.",
-        },
-        {
-          param: "maxLength",
-          type: "int",
-          description: "The maximum Length in characters.",
-        },
-        {
-          param: "tags",
-          type: "string",
-          description: "Get a random quote with specific tag(s).",
-        },
-        {
-          param: "author",
-          type: "string",
-          description: "Get a random quote by one or more authors",
-        },
-      ],
-    },
-    response: {
-      status: 200,
-      data: `
-  {
-      id: number,
-      content: string,
-      author: string,
-      length: number,
-      tags: string[],
-  }
-      `,
-    },
-  },
-  {
-    request: {
-      method: "GET",
-      name: "Random Quotes",
+      name: "Random Quote(s)",
       url: "/random",
       query: [
         {
@@ -88,7 +47,7 @@ const apiReference: APIREFERENCE[] = [
         {
           param: "author",
           type: "string",
-          description: "Get a random quote by one or more authors",
+          description: "Get a random quote by one author.",
         },
       ],
     },
@@ -104,6 +63,25 @@ const apiReference: APIREFERENCE[] = [
         tags: string[],
     }
   ]
+      `,
+    },
+  },
+  {
+    request: {
+      method: "GET",
+      name: "Quote of the Day",
+      url: "/daily-quote",
+    },
+    response: {
+      status: 200,
+      data: `
+  {
+      id: number,
+      content: string,
+      author: string,
+      length: number,
+      tags: string[],
+  }
       `,
     },
   },
